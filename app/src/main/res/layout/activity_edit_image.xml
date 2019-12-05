@@ -26,13 +26,35 @@
         app:layout_constraintTop_toTopOf="parent"
         app:photo_src="@drawable/got_s">
 
+
+    </ja.burhanrashid52.photoeditor.PhotoEditorView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="НАЖМЕ"
-            android:background="@color/colorPrimary"/>
-    </ja.burhanrashid52.photoeditor.PhotoEditorView>
+            android:background="@color/colorAccent"
+            android:text="НАЖМЕ" />
+
+        <Button
+            android:id="@+id/bClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="УДАли" />
+
+        <Button
+            android:id="@+id/bUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:text="Загрузи" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imgUndo"

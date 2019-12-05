@@ -33,6 +33,8 @@ import com.burhanrashid52.photoeditor.tools.ToolType;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
@@ -108,6 +110,8 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         // mPhotoEditorView.getSource().setImageResource(R.drawable.color_palette);
     }
 
+    private List<PhotoEditor.ViewCharacteristic> list = new ArrayList<>();
+
     private void initViews() {
         ImageView imgUndo;
         ImageView imgRedo;
@@ -141,8 +145,19 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         imgClose.setOnClickListener(this);
         Button btn = findViewById(R.id.button);
         btn.setOnClickListener(v -> {
-            Log.d("LISTTT", mPhotoEditor.getAddedViewsCharacteristic().toString());
-
+            list.clear();
+            list.addAll(mPhotoEditor.getAddedViewsCharacteristic());
+            Log.d("LISTTT", list.toString());
+        });
+        Button bClear = findViewById(R.id.bClear);
+        bClear.setOnClickListener(v -> {
+            mPhotoEditor.clearAllViews();
+        });
+        Button bUpload = findViewById(R.id.bUpload);
+        bUpload.setOnClickListener(v -> {
+            mPhotoEditor.uploadViews(list);
+            list.addAll(mPhotoEditor.getAddedViewsCharacteristic());
+            Log.d("LISTTT", list.toString());
         });
 
     }
@@ -151,15 +166,12 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     public void onEditTextChangeListener(final View rootView, String text, int colorCode) {
         TextEditorDialogFragment textEditorDialogFragment =
                 TextEditorDialogFragment.show(this, text, colorCode);
-        textEditorDialogFragment.setOnTextEditorListener(new TextEditorDialogFragment.TextEditor() {
-            @Override
-            public void onDone(String inputText, int colorCode) {
-                final TextStyleBuilder styleBuilder = new TextStyleBuilder();
-                styleBuilder.withTextColor(colorCode);
+        textEditorDialogFragment.setOnTextEditorListener((inputText, colorCode1) -> {
+            final TextStyleBuilder styleBuilder = new TextStyleBuilder();
+            styleBuilder.withTextColor(colorCode1);
 
-                mPhotoEditor.editTextTypeface(rootView, inputText, styleBuilder, null);
-                mTxtCurrentTool.setText(R.string.label_text);
-            }
+            mPhotoEditor.editTextTypeface(rootView, inputText, styleBuilder, null);
+            mTxtCurrentTool.setText(R.string.label_text);
         });
     }
 
