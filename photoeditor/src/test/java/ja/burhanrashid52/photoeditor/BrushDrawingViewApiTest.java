@@ -32,8 +32,8 @@ public class BrushDrawingViewApiTest extends BaseBrushDrawingViewTest {
         assertEquals(drawingPaint.getStyle(), Paint.Style.STROKE);
         assertEquals(drawingPaint.getStrokeJoin(), Paint.Join.ROUND);
         assertEquals(drawingPaint.getStrokeCap(), Paint.Cap.ROUND);
-        assertEquals(drawingPaint.getStrokeWidth(), BrushDrawingView.DEFAULT_BRUSH_SIZE);
-        assertEquals(drawingPaint.getAlpha(), BrushDrawingView.DEFAULT_OPACITY);
+        assertEquals(drawingPaint.getStrokeWidth(), BrushDrawingView.Companion.getDEFAULT_BRUSH_SIZE());
+        assertEquals(drawingPaint.getAlpha(), BrushDrawingView.Companion.getDEFAULT_OPACITY());
         assertTrue(drawingPaint.getXfermode() instanceof PorterDuffXfermode);
 
         // Spy is not working properly
@@ -50,8 +50,8 @@ public class BrushDrawingViewApiTest extends BaseBrushDrawingViewTest {
         assertEquals(drawingPaint.getStyle(), Paint.Style.STROKE);
         assertEquals(drawingPaint.getStrokeJoin(), Paint.Join.ROUND);
         assertEquals(drawingPaint.getStrokeCap(), Paint.Cap.ROUND);
-        assertEquals(drawingPaint.getStrokeWidth(), BrushDrawingView.DEFAULT_BRUSH_SIZE);
-        assertEquals(drawingPaint.getAlpha(), BrushDrawingView.DEFAULT_OPACITY);
+        assertEquals(drawingPaint.getStrokeWidth(), BrushDrawingView.Companion.getDEFAULT_BRUSH_SIZE());
+        assertEquals(drawingPaint.getAlpha(), BrushDrawingView.Companion.getDEFAULT_OPACITY());
         assertTrue(drawingPaint.getXfermode() instanceof PorterDuffXfermode);
 
         Paint spyPaint = Mockito.spy(drawingPaint);
@@ -82,8 +82,8 @@ public class BrushDrawingViewApiTest extends BaseBrushDrawingViewTest {
 
 
         assertTrue(brushDrawingView.getBrushDrawingMode());
-        assertEquals(brushDrawingView.getEraserSize(), BrushDrawingView.DEFAULT_ERASER_SIZE);
-        assertEquals(drawingPaint.getStrokeWidth(), BrushDrawingView.DEFAULT_ERASER_SIZE);
+        assertEquals(brushDrawingView.getEraserSize(), BrushDrawingView.Companion.getDEFAULT_ERASER_SIZE());
+        assertEquals(drawingPaint.getStrokeWidth(), BrushDrawingView.Companion.getDEFAULT_ERASER_SIZE());
         assertTrue(drawingPaint.getXfermode() instanceof PorterDuffXfermode);
     }
 
@@ -92,8 +92,8 @@ public class BrushDrawingViewApiTest extends BaseBrushDrawingViewTest {
     public void testDefaultBrushSize() {
         BrushDrawingView brushDrawingView = new BrushDrawingView(mContext);
         Paint drawingPaint = brushDrawingView.getDrawingPaint();
-        assertEquals(brushDrawingView.getBrushSize(), BrushDrawingView.DEFAULT_BRUSH_SIZE);
-        assertEquals(drawingPaint.getStrokeWidth(), BrushDrawingView.DEFAULT_BRUSH_SIZE);
+        assertEquals(brushDrawingView.getBrushSize(), BrushDrawingView.Companion.getDEFAULT_BRUSH_SIZE());
+        assertEquals(drawingPaint.getStrokeWidth(), BrushDrawingView.Companion.getDEFAULT_BRUSH_SIZE());
     }
 
     @Test
@@ -125,8 +125,8 @@ public class BrushDrawingViewApiTest extends BaseBrushDrawingViewTest {
     public void testDefaultOpacityValue() {
         BrushDrawingView brushDrawingView = new BrushDrawingView(mContext);
         Paint drawingPaint = brushDrawingView.getDrawingPaint();
-        assertEquals(brushDrawingView.getOpacity(), BrushDrawingView.DEFAULT_OPACITY);
-        assertEquals(drawingPaint.getAlpha(), BrushDrawingView.DEFAULT_OPACITY);
+        assertEquals(brushDrawingView.getOpacity(), BrushDrawingView.Companion.getDEFAULT_OPACITY());
+        assertEquals(drawingPaint.getAlpha(), BrushDrawingView.Companion.getDEFAULT_OPACITY());
     }
 
     @Test
