@@ -238,10 +238,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
             try {
                 file.createNewFile();
 
-                SaveSettings saveSettings = new SaveSettings.Builder()
-                        .setClearViewsEnabled(true)
-                        .setTransparencyEnabled(true)
-                        .build();
+                SaveSettings saveSettings = new SaveSettings(true, true, null, null);
 
                 mPhotoEditor.saveAsFile(file.getAbsolutePath(), saveSettings, new PhotoEditor.OnSaveListener() {
                     @Override

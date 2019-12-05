@@ -13,16 +13,15 @@ public class SaveSettingsTest {
 
     @Test
     public void testByDefaultTransparentAndClearViewFlagSettingIsEnabled() {
-        SaveSettings saveSettings = new SaveSettings.Builder().build();
+        SaveSettings saveSettings = new SaveSettings();
         assertTrue(saveSettings.isClearViewsEnabled());
         assertTrue(saveSettings.isTransparencyEnabled());
     }
 
     @Test
     public void testWhenTransparentSettingIsDisabled() {
-        SaveSettings saveSettings = new SaveSettings.Builder()
-                .setTransparencyEnabled(false)
-                .build();
+        SaveSettings saveSettings = new SaveSettings(false, null, null, null);
+
 
         assertFalse(saveSettings.isTransparencyEnabled());
         assertTrue(saveSettings.isClearViewsEnabled());
@@ -30,9 +29,8 @@ public class SaveSettingsTest {
 
     @Test
     public void testWhenClearViewAfterSaveSettingIsDisabled() {
-        SaveSettings saveSettings = new SaveSettings.Builder()
-                .setClearViewsEnabled(false)
-                .build();
+        SaveSettings saveSettings = new SaveSettings(null, false, null, null);
+
 
         assertFalse(saveSettings.isClearViewsEnabled());
         assertTrue(saveSettings.isTransparencyEnabled());
@@ -40,10 +38,8 @@ public class SaveSettingsTest {
 
     @Test
     public void testWhenBothTransparentClearViewAfterSaveSettingIsDisabled() {
-        SaveSettings saveSettings = new SaveSettings.Builder()
-                .setClearViewsEnabled(false)
-                .setTransparencyEnabled(false)
-                .build();
+        SaveSettings saveSettings = new SaveSettings(false, false, null, null);
+
 
         assertFalse(saveSettings.isClearViewsEnabled());
         assertFalse(saveSettings.isTransparencyEnabled());
@@ -51,11 +47,10 @@ public class SaveSettingsTest {
 
     @Test
     public void testDefaultCompressAndQualitySaveSettings() {
-        SaveSettings saveSettings = new SaveSettings.Builder()
-                .build();
+        SaveSettings saveSettings = new SaveSettings(null, null, null, null);
 
         assertEquals(saveSettings.getCompressFormat(), Bitmap.CompressFormat.PNG);
-        assertEquals(saveSettings.getCompressQuality(), 100);
+        assertEquals((int) saveSettings.getCompressQuality(), 100);
     }
 
     @Test
@@ -64,12 +59,10 @@ public class SaveSettingsTest {
         Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.PNG;
         int compressQuality = 50;
 
-        SaveSettings saveSettings = new SaveSettings.Builder()
-                .setCompressFormat(compressFormat)
-                .setCompressQuality(compressQuality)
-                .build();
+        SaveSettings saveSettings = new SaveSettings(null, null, compressFormat, compressQuality);
+
 
         assertEquals(saveSettings.getCompressFormat(), compressFormat);
-        assertEquals(saveSettings.getCompressQuality(), compressQuality);
+        assertEquals((int) saveSettings.getCompressQuality(), compressQuality);
     }
 }

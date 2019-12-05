@@ -72,7 +72,7 @@ public class EmojiBSFragment extends BottomSheetDialogFragment {
 
     public class EmojiAdapter extends RecyclerView.Adapter<EmojiAdapter.ViewHolder> {
 
-        ArrayList<String> emojisList = PhotoEditor.getEmojis(getActivity());
+        ArrayList<String> emojisList = PhotoEditor.Companion.getEmojis(getActivity());
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

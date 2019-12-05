@@ -37,14 +37,14 @@ class BrushDrawingView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : View(context, attrs, defStyle) {
 
-    private var brushSize = DEFAULT_BRUSH_SIZE
+    var brushSize = DEFAULT_BRUSH_SIZE
         set(size) {
             field = size
             brushDrawingMode = true
         }
-    private var eraserSize = DEFAULT_ERASER_SIZE
+    var eraserSize = DEFAULT_ERASER_SIZE
         private set
-    private var opacity = DEFAULT_OPACITY
+    var opacity = DEFAULT_OPACITY
         set(@IntRange(from = 0, to = 255) opacity) {
             field = opacity
             brushDrawingMode = true
@@ -74,14 +74,14 @@ class BrushDrawingView @JvmOverloads constructor(
             }
         }
 
-    internal var brushColor: Int
+    var brushColor: Int
         get() = drawingPaint.color
         set(@ColorInt color) {
             drawingPaint.color = color
             brushDrawingMode = true
         }
 
-    internal val drawingPath: Pair<Stack<LinePath>, Stack<LinePath>>
+    val drawingPath: Pair<Stack<LinePath>, Stack<LinePath>>
         @VisibleForTesting
         get() = Pair(mDrawnPaths, mRedoPaths)
 
@@ -234,7 +234,7 @@ class BrushDrawingView @JvmOverloads constructor(
         // Commit the path to our offscreen
         mPath?.let { mDrawCanvas?.drawPath(it, drawingPaint) }
         // kill this so we don't double draw
-        mDrawnPaths.push(LinePath(mPath, drawingPaint))
+        mDrawnPaths.push(mPath?.let { LinePath(it, drawingPaint) })
         mPath = Path()
         mBrushViewChangeListener?.apply {
             onStopDrawing()
