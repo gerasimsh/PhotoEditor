@@ -156,7 +156,6 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         Button bUpload = findViewById(R.id.bUpload);
         bUpload.setOnClickListener(v -> {
             mPhotoEditor.uploadViews(list);
-            list.addAll(mPhotoEditor.getAddedViewsCharacteristic());
             Log.d("LISTTT", list.toString());
         });
 
