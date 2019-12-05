@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -138,6 +139,11 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
 
         imgClose = findViewById(R.id.imgClose);
         imgClose.setOnClickListener(this);
+        Button btn = findViewById(R.id.button);
+        btn.setOnClickListener(v -> {
+            Log.d("LISTTT", mPhotoEditor.getAddedViewsCharacteristic().toString());
+
+        });
 
     }
 
@@ -151,7 +157,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 final TextStyleBuilder styleBuilder = new TextStyleBuilder();
                 styleBuilder.withTextColor(colorCode);
 
-                mPhotoEditor.editText(rootView, inputText, styleBuilder);
+                mPhotoEditor.editTextTypeface(rootView, inputText, styleBuilder, null);
                 mTxtCurrentTool.setText(R.string.label_text);
             }
         });
@@ -312,25 +318,10 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
     private void showSaveDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you want to exit without saving image ?");
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                saveImage();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setPositiveButton("Save", (dialog, which) -> saveImage());
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
-        builder.setNeutralButton("Discard", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
+        builder.setNeutralButton("Discard", (dialog, which) -> finish());
         builder.create().show();
 
     }
@@ -350,15 +341,12 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                 break;
             case TEXT:
                 TextEditorDialogFragment textEditorDialogFragment = TextEditorDialogFragment.show(this);
-                textEditorDialogFragment.setOnTextEditorListener(new TextEditorDialogFragment.TextEditor() {
-                    @Override
-                    public void onDone(String inputText, int colorCode) {
-                        final TextStyleBuilder styleBuilder = new TextStyleBuilder();
-                        styleBuilder.withTextColor(colorCode);
+                textEditorDialogFragment.setOnTextEditorListener((inputText, colorCode) -> {
+                    final TextStyleBuilder styleBuilder = new TextStyleBuilder();
+                    styleBuilder.withTextColor(colorCode);
 
-                        mPhotoEditor.addText(inputText, styleBuilder);
-                        mTxtCurrentTool.setText(R.string.label_text);
-                    }
+                    mPhotoEditor.addText(inputText, styleBuilder, null);
+                    mTxtCurrentTool.setText(R.string.label_text);
                 });
                 break;
             case ERASER:

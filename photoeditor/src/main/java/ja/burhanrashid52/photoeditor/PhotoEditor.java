@@ -47,7 +47,7 @@ public class PhotoEditor implements BrushViewChangeListener {
     private ImageView imageView;
     private View deleteView;
     private BrushDrawingView brushDrawingView;
-    private List<View> addedViews;
+    private List<ViewParam> addedViews;
     private List<View> redoViews;
     private OnPhotoEditorListener mOnPhotoEditorListener;
     private boolean isTextPinchZoomable;
@@ -102,7 +102,7 @@ public class PhotoEditor implements BrushViewChangeListener {
 
         imageRootView.setOnTouchListener(multiTouchListener);
 
-        addViewToParent(imageRootView, ViewType.IMAGE);
+        addViewToParent(imageRootView, ViewType.IMAGE, null, null);
 
     }
 
@@ -135,7 +135,7 @@ public class PhotoEditor implements BrushViewChangeListener {
             styleBuilder.withTextFont(textTypeface);
         }
 
-        addText(text, styleBuilder);
+        addText(text, styleBuilder, textTypeface);
     }
 
     /**
@@ -146,7 +146,7 @@ public class PhotoEditor implements BrushViewChangeListener {
      * @param styleBuilder text style builder with your style
      */
     @SuppressLint("ClickableViewAccessibility")
-    public void addText(String text, @Nullable TextStyleBuilder styleBuilder) {
+    public void addText(String text, @Nullable TextStyleBuilder styleBuilder, @Nullable Typeface textTypeface) {
         brushDrawingView.setBrushDrawingMode(false);
         final View textRootView = getLayout(ViewType.TEXT);
         final TextView textInputTv = textRootView.findViewById(R.id.tvPhotoEditorText);
@@ -178,7 +178,7 @@ public class PhotoEditor implements BrushViewChangeListener {
         });
 
         textRootView.setOnTouchListener(multiTouchListener);
-        addViewToParent(textRootView, ViewType.TEXT);
+        addViewToParent(textRootView, ViewType.TEXT, textTypeface, styleBuilder);
     }
 
     /**
@@ -207,7 +207,7 @@ public class PhotoEditor implements BrushViewChangeListener {
             styleBuilder.withTextFont(textTypeface);
         }
 
-        editText(view, inputText, styleBuilder);
+        editTextTypeface(view, inputText, styleBuilder, textTypeface);
     }
 
     /**
@@ -217,7 +217,7 @@ public class PhotoEditor implements BrushViewChangeListener {
      * @param inputText    text to update {@link TextView}
      * @param styleBuilder style to apply on {@link TextView}
      */
-    public void editText(@NonNull View view, String inputText, @Nullable TextStyleBuilder styleBuilder) {
+    public void editTextTypeface(@NonNull View view, String inputText, @Nullable TextStyleBuilder styleBuilder, @Nullable Typeface textTypeface) {
         TextView inputTextView = view.findViewById(R.id.tvPhotoEditorText);
         if (inputTextView != null && addedViews.contains(view) && !TextUtils.isEmpty(inputText)) {
             inputTextView.setText(inputText);
@@ -226,7 +226,7 @@ public class PhotoEditor implements BrushViewChangeListener {
 
             parentView.updateViewLayout(view, view.getLayoutParams());
             int i = addedViews.indexOf(view);
-            if (i > -1) addedViews.set(i, view);
+            if (i > -1) addedViews.set(i, new ViewParam(view, textTypeface, styleBuilder));
         }
     }
 
@@ -274,21 +274,23 @@ public class PhotoEditor implements BrushViewChangeListener {
             }
         });
         emojiRootView.setOnTouchListener(multiTouchListener);
-        addViewToParent(emojiRootView, ViewType.EMOJI);
+        addViewToParent(emojiRootView, ViewType.EMOJI, emojiTypeface, null);
     }
 
 
     /**
      * Add to root view from image,emoji and text to our parent view
      *
-     * @param rootView rootview of image,text and emoji
+     * @param rootView     rootview of image,text and emoji
+     * @param typeface
+     * @param styleBuilder
      */
-    private void addViewToParent(View rootView, ViewType viewType) {
+    private void addViewToParent(View rootView, ViewType viewType, Typeface typeface, TextStyleBuilder styleBuilder) {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         parentView.addView(rootView, params);
-        addedViews.add(rootView);
+        addedViews.add(new ViewParam(rootView, typeface, styleBuilder));
         if (mOnPhotoEditorListener != null)
             mOnPhotoEditorListener.onAddViewListener(viewType, addedViews.size());
     }
@@ -344,6 +346,7 @@ public class PhotoEditor implements BrushViewChangeListener {
                     txtTextEmoji.setGravity(Gravity.CENTER);
                     txtTextEmoji.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                 }
+
                 break;
         }
 
@@ -500,7 +503,7 @@ public class PhotoEditor implements BrushViewChangeListener {
      */
     public boolean undo() {
         if (addedViews.size() > 0) {
-            View removeView = addedViews.get(addedViews.size() - 1);
+            View removeView = addedViews.get(addedViews.size() - 1).view;
             if (removeView instanceof BrushDrawingView) {
                 return brushDrawingView != null && brushDrawingView.undo();
             } else {
@@ -531,7 +534,7 @@ public class PhotoEditor implements BrushViewChangeListener {
             } else {
                 redoViews.remove(redoViews.size() - 1);
                 parentView.addView(redoView);
-                addedViews.add(redoView);
+                addedViews.add(new ViewParam(redoView, null, null));
             }
             Object viewTag = redoView.getTag();
             if (mOnPhotoEditorListener != null && viewTag != null && viewTag instanceof ViewType) {
@@ -552,7 +555,7 @@ public class PhotoEditor implements BrushViewChangeListener {
      */
     public void clearAllViews() {
         for (int i = 0; i < addedViews.size(); i++) {
-            parentView.removeView(addedViews.get(i));
+            parentView.removeView(addedViews.get(i).view);
         }
         if (addedViews.contains(brushDrawingView)) {
             parentView.addView(brushDrawingView);
@@ -803,7 +806,7 @@ public class PhotoEditor implements BrushViewChangeListener {
         if (redoViews.size() > 0) {
             redoViews.remove(redoViews.size() - 1);
         }
-        addedViews.add(brushDrawingView);
+        addedViews.add(new ViewParam(brushDrawingView, null, null));
         if (mOnPhotoEditorListener != null) {
             mOnPhotoEditorListener.onAddViewListener(ViewType.BRUSH_DRAWING, addedViews.size());
         }
@@ -812,7 +815,7 @@ public class PhotoEditor implements BrushViewChangeListener {
     @Override
     public void onViewRemoved(BrushDrawingView brushDrawingView) {
         if (addedViews.size() > 0) {
-            View removeView = addedViews.remove(addedViews.size() - 1);
+            View removeView = addedViews.remove(addedViews.size() - 1).view;
             if (!(removeView instanceof BrushDrawingView)) {
                 parentView.removeView(removeView);
             }
@@ -926,5 +929,155 @@ public class PhotoEditor implements BrushViewChangeListener {
             convertedEmojiList.add(convertEmoji(emojiUnicode));
         }
         return convertedEmojiList;
+    }
+
+    public List<ViewCharacteristic> getAddedViewsCharacteristic() {
+        List<ViewCharacteristic> list = new ArrayList<>();
+        for (ViewParam viewParam : addedViews) {
+            list.add(getViewCharacteric(viewParam));
+
+        }
+        return list;
+    }
+
+
+    private ViewCharacteristic getViewCharacteric(ViewParam viewParam) {
+        View view = viewParam.view;
+        int weight = view.getWidth();
+        int height = view.getHeight();
+        float alpha = view.getAlpha();
+        float rotation = view.getRotation();
+        Typeface typeface = viewParam.typeface;
+        TextStyleBuilder textStyleBuilder = viewParam.textStyleBuilder;
+        ViewType viewType;
+        String content = "";
+
+        viewType = (ViewType) view.getTag();
+
+        return new ViewCharacteristic(weight, height, alpha, rotation, typeface, viewType, textStyleBuilder, content);
+    }
+
+    class ViewCharacteristic {
+        private int weight;
+        private int height;
+        private float alpha;
+        private float rotation;
+
+        private Typeface typeface;
+        private ViewType viewType;
+        private TextStyleBuilder textStyleBuilder;
+        private String content;
+
+        ViewCharacteristic(int weight, int height, float alpha, float rotation, Typeface typeface, ViewType viewType, int viewColor, String content) {
+            this.weight = weight;
+            this.height = height;
+            this.alpha = alpha;
+            this.rotation = rotation;
+            this.typeface = typeface;
+            this.viewType = viewType;
+            this.content = content;
+        }
+
+        public ViewCharacteristic(int weight, int height, float alpha, float rotation, Typeface typeface, ViewType viewType, TextStyleBuilder textStyleBuilder, String content) {
+            this.weight = weight;
+            this.height = height;
+            this.alpha = alpha;
+            this.rotation = rotation;
+            this.typeface = typeface;
+            this.viewType = viewType;
+            this.textStyleBuilder = textStyleBuilder;
+            this.content = content;
+        }
+
+        public int getWeight() {
+            return weight;
+        }
+
+        public void setWeight(int weight) {
+            this.weight = weight;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
+        }
+
+        public float getAlpha() {
+            return alpha;
+        }
+
+        public void setAlpha(float alpha) {
+            this.alpha = alpha;
+        }
+
+        public float getRotation() {
+            return rotation;
+        }
+
+        public void setRotation(float rotation) {
+            this.rotation = rotation;
+        }
+
+        public Typeface getTypeface() {
+            return typeface;
+        }
+
+        public void setTypeface(Typeface typeface) {
+            this.typeface = typeface;
+        }
+
+        public TextStyleBuilder getTextStyleBuilder() {
+            return textStyleBuilder;
+        }
+
+        public void setTextStyleBuilder(TextStyleBuilder textStyleBuilder) {
+            this.textStyleBuilder = textStyleBuilder;
+        }
+
+        public ViewType getViewType() {
+            return viewType;
+        }
+
+        public void setViewType(ViewType viewType) {
+            this.viewType = viewType;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        @Override
+        public String toString() {
+            return "ViewCharacteristic{" +
+                    "weight=" + weight +
+                    ", height=" + height +
+                    ", alpha=" + alpha +
+                    ", rotation=" + rotation +
+                    ", typeface=" + typeface +
+                    ", viewType=" + viewType +
+                    ", textStyleBuilder=" + textStyleBuilder +
+                    ", content='" + content + '\'' +
+                    '}';
+        }
+    }
+
+    class ViewParam {
+        private View view;
+        private Typeface typeface;
+        private TextStyleBuilder textStyleBuilder;
+
+
+        public ViewParam(View view, Typeface typeface, TextStyleBuilder textStyleBuilder) {
+            this.view = view;
+            this.typeface = typeface;
+            this.textStyleBuilder = textStyleBuilder;
+        }
     }
 }
