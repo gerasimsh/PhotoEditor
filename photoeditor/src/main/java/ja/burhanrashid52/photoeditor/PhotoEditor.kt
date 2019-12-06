@@ -568,11 +568,9 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
                 //todo
                 // redoViews.add(removeView)
             }
-            if (mOnPhotoEditorListener != null) {
-                val viewTag = removeView?.tag
-                if (viewTag != null && viewTag is ViewType) {
-                    mOnPhotoEditorListener?.onRemoveViewListener(viewTag, addedViews.size)
-                }
+            val viewTag = removeView?.tag
+            if (viewTag != null && viewTag is ViewType) {
+                mOnPhotoEditorListener?.onRemoveViewListener(viewTag, addedViews.size)
             }
         }
         return addedViews.size != 0
@@ -594,7 +592,7 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
                 addedViews.add(ViewParam(redoView, null, null))
             }
             val viewTag = redoView.tag
-            if (mOnPhotoEditorListener != null && viewTag != null && viewTag is ViewType) {
+            if (viewTag != null && viewTag is ViewType) {
                 mOnPhotoEditorListener?.onAddViewListener(viewTag, addedViews.size)
             }
         }
