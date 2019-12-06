@@ -236,7 +236,7 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
             styleBuilder.withTextFont(textTypeface)
         }
 
-        addText(text, styleBuilder, textTypeface)
+        addText(text, styleBuilder, textTypeface, colorCodeTextView)
     }
 
     /**
@@ -247,10 +247,16 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
      * @param styleBuilder text style builder with your style
      */
     @SuppressLint("ClickableViewAccessibility")
-    fun addText(text: String, styleBuilder: TextStyleBuilder?, textTypeface: Typeface?) {
+    fun addText(
+        text: String,
+        styleBuilder: TextStyleBuilder?,
+        textTypeface: Typeface?,
+        color: Int
+    ) {
         val viewParam = ViewParam().apply {
             typeface = textTypeface
             textStyleBuilder = styleBuilder
+            colorView = color
         }
         brushDrawingView?.brushDrawingMode = false
         val textRootView = getLayout(ViewType.TEXT, viewParam)
@@ -1056,7 +1062,8 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
                 v.translationX,
                 v.translationY,
                 v.pivotX,
-                v.pivotY
+                v.pivotY,
+                viewParam.colorView ?: 0
             )
         } ?: return null
 

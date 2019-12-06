@@ -7,5 +7,5 @@ data class ViewParam(
     var view: View? = null,
     var typeface: Typeface? = null,
     var textStyleBuilder: TextStyleBuilder? = null,
-    val colorView: Int? = null
+    var colorView: Int? = null
 )
