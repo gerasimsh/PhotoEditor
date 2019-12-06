@@ -711,9 +711,15 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
     }
 
     private fun addTextWithParameters(viewCharacteristic: ViewCharacteristic) {
+        val styleBuilder = TextStyleBuilder()
         val viewParam = ViewParam()
-        viewParam.typeface = viewCharacteristic.typeface
-        viewParam.textStyleBuilder = viewCharacteristic.textStyleBuilder
+        styleBuilder.withTextColor(viewCharacteristic.color)
+        viewCharacteristic.typeface?.let {
+            styleBuilder.withTextFont(it)
+            viewParam.typeface = it
+        }
+        viewParam.textStyleBuilder = styleBuilder
+        viewParam.colorView = viewCharacteristic.color
 
         brushDrawingView?.brushDrawingMode = false
         val textRootView = getLayout(ViewType.TEXT, viewParam)
