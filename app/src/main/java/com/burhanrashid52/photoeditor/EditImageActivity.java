@@ -42,6 +42,7 @@ import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import ja.burhanrashid52.photoeditor.PhotoFilter;
 import ja.burhanrashid52.photoeditor.SaveSettings;
 import ja.burhanrashid52.photoeditor.TextStyleBuilder;
+import ja.burhanrashid52.photoeditor.ViewCharacteristic;
 import ja.burhanrashid52.photoeditor.ViewType;
 
 public class EditImageActivity extends BaseActivity implements OnPhotoEditorListener,
@@ -110,7 +111,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
         // mPhotoEditorView.getSource().setImageResource(R.drawable.color_palette);
     }
 
-    private List<PhotoEditor.ViewCharacteristic> list = new ArrayList<>();
+    private List<ViewCharacteristic> list = new ArrayList<>();
 
     private void initViews() {
         ImageView imgUndo;
