@@ -120,7 +120,7 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
             val list = ArrayList<ViewCharacteristic>()
             for (viewParam in addedViews) {
                 if (viewParam.view?.tag === ViewType.EMOJI || viewParam.view?.tag === ViewType.TEXT)
-                    getViewCharacteric(viewParam)?.let {
+                    getViewCharacteristic(viewParam)?.let {
                         list.add(it)
                     }
             }
@@ -1032,7 +1032,7 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
     }
 
 
-    private fun getViewCharacteric(viewParam: ViewParam): ViewCharacteristic? {
+    private fun getViewCharacteristic(viewParam: ViewParam): ViewCharacteristic? {
         val view = viewParam.view
         view?.let { v ->
             val scaleX = v.scaleX
