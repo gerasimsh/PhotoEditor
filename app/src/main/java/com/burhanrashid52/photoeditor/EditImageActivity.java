@@ -354,7 +354,7 @@ public class EditImageActivity extends BaseActivity implements OnPhotoEditorList
                     final TextStyleBuilder styleBuilder = new TextStyleBuilder();
                     styleBuilder.withTextColor(colorCode);
 
-                    mPhotoEditor.addText(inputText, styleBuilder, null);
+                    mPhotoEditor.addText(inputText, styleBuilder, null, 0);
                     mTxtCurrentTool.setText(R.string.label_text);
                 });
                 break;

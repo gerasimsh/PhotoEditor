@@ -936,9 +936,8 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
             redoViews.removeAt(redoViews.size - 1)
         }
         addedViews.add(ViewParam(brushDrawingView, null, null))
-        mOnPhotoEditorListener?.apply {
-            onAddViewListener(ViewType.BRUSH_DRAWING, addedViews.size)
-        }
+        mOnPhotoEditorListener?.onAddViewListener(ViewType.BRUSH_DRAWING, addedViews.size)
+
     }
 
 
