@@ -7,7 +7,6 @@ data class ViewCharacteristic(
     var scaleY: Float = 0f,
     var alpha: Float = 0f,
     var rotation: Float = 0f,
-
     var typeface: Typeface? = null,
     var viewType: ViewType? = null,
     var textStyleBuilder: TextStyleBuilder? = null,
