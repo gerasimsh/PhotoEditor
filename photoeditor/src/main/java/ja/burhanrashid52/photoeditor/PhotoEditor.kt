@@ -564,7 +564,7 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
                 return brushDrawingView != null && brushDrawingView.undo()
             } else {
                 addedViews.removeAt(addedViews.size - 1)
-                parentView!!.removeView(removeView)
+                parentView?.removeView(removeView)
                 //todo
                 // redoViews.add(removeView)
             }
@@ -631,6 +631,7 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
     @UiThread
     fun clearHelperBox() {
         for (i in 0 until parentView!!.childCount) {
+
             val childAt = parentView.getChildAt(i)
             val frmBorder = childAt.findViewById<FrameLayout>(R.id.frmBorder)
             frmBorder?.setBackgroundResource(0)
@@ -665,8 +666,12 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
         } else {
             for (viewCharacteristic in list) {
                 when (viewCharacteristic.viewType) {
-                    ViewType.TEXT -> addTextWithParametrs(viewCharacteristic)
+                    ViewType.TEXT -> addTextWithParameters(viewCharacteristic)
                     ViewType.EMOJI -> addEmojiWithParametrs(viewCharacteristic)
+                    else -> Log.v(
+                        TAG,
+                        "I cant load this type of view -  ${viewCharacteristic.viewType}"
+                    )
                 }
             }
         }
@@ -701,7 +706,7 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
 
     }
 
-    private fun addTextWithParametrs(viewCharacteristic: ViewCharacteristic) {
+    private fun addTextWithParameters(viewCharacteristic: ViewCharacteristic) {
         val viewParam = ViewParam()
         viewParam.typeface = viewCharacteristic.typeface
         viewParam.textStyleBuilder = viewCharacteristic.textStyleBuilder
@@ -729,13 +734,11 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
                 override fun onLongClick() {
                     val textInput = textInputTv.text.toString()
                     val currentTextColor = textInputTv.currentTextColor
-                    if (mOnPhotoEditorListener != null) {
-                        mOnPhotoEditorListener!!.onEditTextChangeListener(
-                            rootView,
-                            textInput,
-                            currentTextColor
-                        )
-                    }
+                    mOnPhotoEditorListener?.onEditTextChangeListener(
+                        rootView,
+                        textInput,
+                        currentTextColor
+                    )
                 }
             })
 
