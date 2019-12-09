@@ -729,8 +729,7 @@ class PhotoEditor private constructor(builder: Builder) : BrushViewChangeListene
             val frmBorder = rootView.findViewById<FrameLayout>(R.id.frmBorder)
 
             textInputTv.text = viewCharacteristic.content
-            if (viewCharacteristic.textStyleBuilder != null)
-                viewCharacteristic.textStyleBuilder?.applyStyle(textInputTv)
+            styleBuilder.applyStyle(textInputTv)
 
             val multiTouchListener = multiTouchListener
             multiTouchListener.setOnGestureControl(object : MultiTouchListener.OnGestureControl {
